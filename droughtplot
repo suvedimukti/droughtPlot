@@ -1,0 +1,36 @@
+
+library(tidyverse)
+library(lubridate)
+
+# read data
+dat<- read_csv(file = "C:/climateData/Climate_Data_ActualPlots/climateIndex_1980_2019_01282020.csv",
+               col_names = TRUE)
+# convert date YYYY-MM to YYYY-MM-DD
+dat$dat1<- as_date(paste(dat$date,"-01"))
+
+# subset data for mapping
+
+dat1<- dat %>% filter(year>1999)
+
+# plot drought  spei12
+
+gdrought<- ggplot(data = dat1, aes(x = dat1, y = spei12,
+                                fill = spei12,color = spei12)) + 
+  stat_summary(fun = mean, geom = "bar", position = position_dodge(0.5))+
+  geom_hline(yintercept = c(0))+
+  geom_hline(yintercept = -1, colour = "red")+
+  xlab("Date")+
+  ylab("Average 12-Month SPEI")+
+  scale_color_manual(values = "grey10")+
+  scale_fill_manual(values = "grey95")+
+  theme_bw()+
+  theme(
+    axis.text.x       = element_text(size   = 10, angle = 360, face = "bold",
+                                     color = "black",vjust = 1),
+    axis.text.y       = element_text(size   = 10, face = "bold", 
+                                     angle = 360, color = "black"),
+    axis.title.x      = element_text(size   = 11, face = "bold", colour = "black"),
+    axis.title.y      = element_text(size   = 11, face = "bold", colour = "black")
+  )
+
+gdrought
